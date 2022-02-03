@@ -37,7 +37,7 @@ public class UserMealsUtil {
             int calories = caloriesMap.getOrDefault(date, 0);
             caloriesMap.put(date, calories + meal.getCalories());
             LocalTime time = meal.getDateTime().toLocalTime();
-            if (time.isAfter(startTime)&&time.isBefore(endTime)) {
+            if (TimeUtil.isBetweenHalfOpen(time,startTime,endTime)) {
                 filterMeals.add(meal);
             }
         }
@@ -60,7 +60,7 @@ public class UserMealsUtil {
                     int calories = caloriesMap.getOrDefault(date,0);
                     caloriesMap.put(date, calories + w.getCalories());
                 })
-                .filter(w -> (w.getDateTime().toLocalTime().isAfter(startTime)&&w.getDateTime().toLocalTime().isBefore(endTime)))
+                .filter(w -> (TimeUtil.isBetweenHalfOpen(w.getDateTime().toLocalTime(),startTime,endTime)))
                 .collect(Collectors.toList());
         return filtredMeals.stream()
                 .map(w -> {
