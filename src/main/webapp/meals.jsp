@@ -19,6 +19,7 @@
         <th style="background-color:LightCyan">Time</th>
         <th style="background-color:LightCyan">Description</th>
         <th style="background-color:LightCyan">Calories</th>
+        <th style="background-color:LightCyan">ID</th>
     </tr> <!--ряд с ячейками заголовков-->
 
     <% List<MealTo> meals = (List<MealTo>)request.getAttribute("meals");
@@ -34,7 +35,8 @@
             String date = meal.getDate().toString();
             String time = meal.getTime().toString();
             String description = meal.getDescription();
-            int calories = meal.getCalories(); %>
+            int calories = meal.getCalories();
+            Integer id = meal.getId();%>
         <tr style="background-color:<%= color%>" >
     <td>
         <%= index%>
@@ -51,8 +53,11 @@
     <td>
         <%= calories%>
     </td>
+    <td>
+        <%= id%>
+    </td>
     </tr>
-        <%}%>
+    <%}%>
 
 </table>
 </body>
