@@ -10,6 +10,11 @@ import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class MealsDB {
+    /**TODO
+     * переделать базу так, чтобы создавался один инстанс объект базы данных, методы следовательно - не статические.
+     * А в класе MealDAO, появится поле объекта бд, получаемое через getInstance. Инициализацию начальных данных
+     * проводить в отдельном методе init() в приватном конструкторе. Конструктор защитить от многопоточности.
+      */
     private final static AtomicInteger counter = new AtomicInteger(0);
     private final static List<Meal> mealsDB = Collections.synchronizedList(new ArrayList<>());
 
@@ -32,24 +37,42 @@ public class MealsDB {
 
     public static void add(LocalDateTime dateTime, String description, int calories) {
         Integer id = counter.incrementAndGet();
-        mealsDB.add(new Meal(dateTime, description, calories, id));
+        Meal meal = new Meal(dateTime, description, calories);
+        meal.setId(id);
+        mealsDB.add(meal);
     }
 
-    public static void delete(Integer id) throws NotFoundException {
+    public static Meal get(Integer id)  {
+        for (Meal meal : mealsDB) {
+            if (meal.getId().equals(id)) {
+                return meal;
+            }
+        }
+        return null;
+    }
+    public static boolean delete(Integer id) {
         Meal meal = get(id);
+        if (meal == null) {
+            return false;
+        }
         mealsDB.remove(meal);
+        return true;
+    }
+
+    public static boolean update(Integer id, LocalDateTime dateTime, String description, int calories) {
+        if (delete(id)) {
+            Meal meal = new Meal(dateTime, description, calories);
+            meal.setId(id);
+            mealsDB.add(meal);
+            return true;
+        } else {
+            return false;
+        }
     }
 
     public static List<Meal> getAll() {
         return mealsDB;
     }
 
-    private static Meal get(Integer id) throws NotFoundException {
-        for (Meal meal : mealsDB) {
-            if (meal.getId().equals(id)) {
-                return meal;
-            }
-        }
-        throw new NotFoundException();
-    }
+
 }
