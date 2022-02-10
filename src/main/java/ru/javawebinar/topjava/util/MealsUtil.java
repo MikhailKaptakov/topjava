@@ -1,5 +1,7 @@
 package ru.javawebinar.topjava.util;
 
+import ru.javawebinar.topjava.dao.MealDao;
+import ru.javawebinar.topjava.database.MealsDB;
 import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.model.MealTo;
 
@@ -13,14 +15,17 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 public class MealsUtil {
+    public static final int CALORIES_DAY_LIMIT = 2000;
 
     public static void main(String[] args) {
-        List<Meal> meals = listMeals();
-        List<MealTo> mealsTo = filteredByStreams(meals, LocalTime.of(7, 0), LocalTime.of(12, 0), 2000);
+        List<Meal> meals = new MealDao().getAll();
+        List<MealTo> mealsTo = filteredByStreams(meals, LocalTime.of(7, 0), LocalTime.of(12, 0),
+                CALORIES_DAY_LIMIT);
         mealsTo.forEach(System.out::println);
     }
 
-    public static List<MealTo> filteredByStreams(List<Meal> meals, LocalTime startTime, LocalTime endTime, int caloriesPerDay) {
+    public static List<MealTo> filteredByStreams(List<Meal> meals, LocalTime startTime,
+                                                 LocalTime endTime, int caloriesPerDay) {
         Map<LocalDate, Integer> caloriesSumByDate = meals.stream()
                 .collect(
                         Collectors.groupingBy(Meal::getDate, Collectors.summingInt(Meal::getCalories))
@@ -39,15 +44,7 @@ public class MealsUtil {
         return mealTo;
     }
 
-    public static List<Meal> listMeals() {
-        return Arrays.asList(
-                new Meal(LocalDateTime.of(2020, Month.JANUARY, 30, 10, 0), "Завтрак", 500),
-                new Meal(LocalDateTime.of(2020, Month.JANUARY, 30, 13, 0), "Обед", 1000),
-                new Meal(LocalDateTime.of(2020, Month.JANUARY, 30, 20, 0), "Ужин", 500),
-                new Meal(LocalDateTime.of(2020, Month.JANUARY, 31, 0, 0), "Еда на граничное значение", 100),
-                new Meal(LocalDateTime.of(2020, Month.JANUARY, 31, 10, 0), "Завтрак", 1000),
-                new Meal(LocalDateTime.of(2020, Month.JANUARY, 31, 13, 0), "Обед", 500),
-                new Meal(LocalDateTime.of(2020, Month.JANUARY, 31, 20, 0), "Ужин", 410)
-        );
+    public static List<MealTo> allMealsTo (List<Meal> meals) {
+        return filteredByStreams(meals, LocalTime.MIN, LocalTime.MAX,MealsUtil.CALORIES_DAY_LIMIT);
     }
 }

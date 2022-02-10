@@ -6,10 +6,10 @@ import ru.javawebinar.topjava.model.Meal;
 
 import java.util.List;
 
-public class MealDAO implements CRUDMealDB {
+public class MealDao implements CRUDMealDB {
     private final MealsDB connection;
 
-    public MealDAO() {
+    public MealDao() {
         this.connection = MealsDB.getInstance();
     }
 
