@@ -6,3 +6,4 @@ log
 *.patch
 
 
+/doc/toDoList.txt

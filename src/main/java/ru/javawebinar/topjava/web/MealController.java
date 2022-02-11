@@ -35,7 +35,7 @@ public class MealController extends HttpServlet {
             throws ServletException, IOException {
         log.debug("redirect to mealController GET");
         request.setCharacterEncoding("UTF-8");
-        String forward = "";
+        String forward;
         String action = request.getParameter("action");
 
         if (action.equalsIgnoreCase("mealsList")){
@@ -61,7 +61,7 @@ public class MealController extends HttpServlet {
             throws ServletException, IOException {
         log.debug("redirect to mealController POST");
         request.setCharacterEncoding("UTF-8");
-        LocalDateTime date = LocalDateTime.parse(request.getParameter("dob"),
+        LocalDateTime date = LocalDateTime.parse(request.getParameter("dateTime"),
                 DateTimeFormatter.ofPattern("yyyy.MM.dd HH:mm"));
         String description = request.getParameter("description");
         int calories = Integer.parseInt(request.getParameter("calories"));
@@ -75,7 +75,7 @@ public class MealController extends HttpServlet {
             meal.setId(Integer.parseInt(mealId));
             dao.update(meal);
         }
-        request.setAttribute("meals", dao.getAll());
+        request.setAttribute("meals", MealsUtil.allMealsTo(dao.getAll()));
         request.getRequestDispatcher(MEALS_LIST).forward(request, response);
     }
 

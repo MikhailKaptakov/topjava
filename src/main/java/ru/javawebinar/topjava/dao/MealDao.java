@@ -4,6 +4,7 @@ import ru.javawebinar.topjava.database.CRUDMealDB;
 import ru.javawebinar.topjava.database.MealsDB;
 import ru.javawebinar.topjava.model.Meal;
 
+import java.util.Comparator;
 import java.util.List;
 
 public class MealDao implements CRUDMealDB {
@@ -30,11 +31,15 @@ public class MealDao implements CRUDMealDB {
 
     @Override
     public List<Meal> getAll() {
-        return connection.getAll();
+        List<Meal> meals = connection.getAll();
+        meals.sort(Comparator.comparing(Meal::getDateTime));
+        return meals;
     }
 
     @Override
     public Meal get(Integer id) {
         return connection.get(id);
     }
+
+
 }
