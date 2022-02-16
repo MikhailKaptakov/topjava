@@ -5,11 +5,14 @@ import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.repository.MealRepository;
 import ru.javawebinar.topjava.util.MealsUtil;
 
+import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
+
+import static ru.javawebinar.topjava.util.DateTimeUtil.isBetweenDateTime;
 
 @Repository
 public class InMemoryMealRepository implements MealRepository {
@@ -51,7 +54,14 @@ public class InMemoryMealRepository implements MealRepository {
 
     @Override
     public Collection<Meal> getAll(int userId) {
-        return repository.values().stream().filter(m->m.getUserId()== userId).collect(Collectors.toList());
+        return repository.values().stream().filter(m->m.getUserId()== userId)
+                .sorted((m1,m2) -> -1*m1.getDate().compareTo(m2.getDate())).collect(Collectors.toList());
+    }
+
+
+    public Collection<Meal> getAll(int userId, LocalDateTime start, LocalDateTime end) {
+        return  getAll(userId).stream().filter(meal -> isBetweenDateTime(meal.getDateTime(), start, end))
+                .collect(Collectors.toList());
     }
 }
 

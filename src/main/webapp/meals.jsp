@@ -20,6 +20,28 @@
 <section>
     <h3><a href="index.html">Home</a></h3>
     <hr/>
+  <form method="get" action="meals">
+      <input type="hidden" name="action" value="filtered">
+      <dl>
+        <dt>DateStart:</dt>
+        <dd><input type="date" value="2020-01-01" name="dateStart" required></dd>
+      </dl>
+      <dl>
+          <dt>DateEnd:</dt>
+          <dd><input type="date" value="2020-02-01" name="dateEnd" required></dd>
+      </dl>
+      <dl>
+          <dt>TimeStart:</dt>
+          <dd><input type="time" value="00:00" name="timeStart" required></dd>
+      </dl>
+      <dl>
+          <dt>TimeEnd:</dt>
+          <dd><input type="time" value="23:59" name="timeEnd" required></dd>
+      </dl>
+        <button type="submit">Filter</button>
+    </form>
+
+    <hr/>
     <h2>Meals</h2>
     <a href="meals?action=create">Add Meal</a>
     <br><br>
