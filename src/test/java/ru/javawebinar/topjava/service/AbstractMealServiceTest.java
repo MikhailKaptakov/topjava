@@ -53,7 +53,7 @@ public abstract class AbstractMealServiceTest {
     };
 
     @Autowired
-    private MealService service;
+    protected MealService service;
 
     @AfterClass
     public static void printResult() {
