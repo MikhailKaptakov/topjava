@@ -28,8 +28,6 @@ import static org.slf4j.LoggerFactory.getLogger;
 import static ru.javawebinar.topjava.MealTestData.*;
 import static ru.javawebinar.topjava.UserTestData.ADMIN_ID;
 import static ru.javawebinar.topjava.UserTestData.USER_ID;
-import static ru.javawebinar.topjava.Profiles.DATAJPA;
-import static ru.javawebinar.topjava.Profiles.POSTGRES_DB;
 
 @ContextConfiguration({
         "classpath:spring/spring-app.xml",
@@ -37,8 +35,8 @@ import static ru.javawebinar.topjava.Profiles.POSTGRES_DB;
 })
 @RunWith(SpringRunner.class)
 @Sql(scripts = "classpath:db/populateDB.sql", config = @SqlConfig(encoding = "UTF-8"))
-@ActiveProfiles({DATAJPA, POSTGRES_DB})
-public class MealServiceTest {
+@ActiveProfiles(resolver = ActiveDbProfileResolver.class)
+abstract public class AbstractMealServiceTest {
     private static final Logger log = getLogger("result");
 
     private static final StringBuilder results = new StringBuilder();
