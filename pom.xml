@@ -187,6 +187,7 @@
         </dependency>
     </dependencies>
 
+    <!-- DB profiles -->
     <profiles>
         <profile>
             <id>hsqldb</id>
