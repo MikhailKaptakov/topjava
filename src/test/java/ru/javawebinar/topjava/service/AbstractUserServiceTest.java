@@ -75,6 +75,12 @@ public abstract class AbstractUserServiceTest extends AbstractServiceTest {
         USER_MATCHER.assertMatch(user, UserTestData.user);
     }
 
+   @Test
+    public void getAdmin() {
+        User user = service.get(ADMIN_ID);
+        USER_MATCHER.assertMatch(user, admin);
+    }
+
     @Test
     public void getNotFound() {
         assertThrows(NotFoundException.class, () -> service.get(NOT_FOUND));
