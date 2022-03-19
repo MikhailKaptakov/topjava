@@ -15,6 +15,9 @@ import ru.javawebinar.topjava.model.Role;
 import ru.javawebinar.topjava.model.User;
 import ru.javawebinar.topjava.repository.UserRepository;
 
+import javax.validation.ConstraintViolation;
+import javax.validation.ConstraintViolationException;
+import javax.validation.Validator;
 import java.sql.PreparedStatement;
 import java.util.*;
 
@@ -29,19 +32,23 @@ public class JdbcUserRepository implements UserRepository {
 
     private final SimpleJdbcInsert insertUser;
 
+    private final Validator validator;
+
     @Autowired
-    public JdbcUserRepository(JdbcTemplate jdbcTemplate, NamedParameterJdbcTemplate namedParameterJdbcTemplate) {
+    public JdbcUserRepository(Validator validator, JdbcTemplate jdbcTemplate, NamedParameterJdbcTemplate namedParameterJdbcTemplate) {
         this.insertUser = new SimpleJdbcInsert(jdbcTemplate)
                 .withTableName("users")
                 .usingGeneratedKeyColumns("id");
 
         this.jdbcTemplate = jdbcTemplate;
         this.namedParameterJdbcTemplate = namedParameterJdbcTemplate;
+        this.validator = validator;
     }
 
     @Override
     @Transactional
     public User save(User user) {
+        validatorExceptionThrow(user);
         BeanPropertySqlParameterSource parameterSource = new BeanPropertySqlParameterSource(user);
 
         if (user.isNew()) {
@@ -129,4 +136,10 @@ public class JdbcUserRepository implements UserRepository {
         jdbcTemplate.update("DELETE FROM user_roles WHERE user_id=?", u.getId());
     }
 
+    private <T> void validatorExceptionThrow(T t) {
+        Set<ConstraintViolation<T>> violation = validator.validate(t);
+        if (!violation.isEmpty()) {
+            throw new ConstraintViolationException(violation);
+        }
+    }
 }
