@@ -17,4 +17,6 @@
             <bean class="org.springframework.cache.jcache.JCacheManagerFactoryBean" p:cacheManagerUri="classpath:cache/ehcache.xml"/>
         </property>
     </bean>
+    <bean id="noOpCacheManager" class="org.springframework.cache.support.NoOpCacheManager"></bean>
+
 </beans>

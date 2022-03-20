@@ -1,5 +1,6 @@
 package ru.javawebinar.topjava.repository;
 
+import org.hibernate.CacheMode;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 
@@ -18,4 +19,5 @@ public class JpaUtil {
 //        sf.getCache().evictEntityData(User.class);
         sf.getCache().evictAllRegions();
     }
+
 }

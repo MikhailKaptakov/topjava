@@ -1,5 +1,10 @@
 package ru.javawebinar.topjava.service;
 
+import org.junit.BeforeClass;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.config.PropertyOverrideConfigurer;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.core.env.Environment;
 import org.junit.Assume;
 import org.junit.Before;
@@ -29,17 +34,22 @@ public abstract class AbstractUserServiceTest extends AbstractServiceTest {
     protected UserService service;
 
     @Autowired
+    @Qualifier("noOpCacheManager")
     private CacheManager cacheManager;
 
     @Autowired(required = false)
     protected JpaUtil jpaUtil;
 
+    @Autowired(required = false)
+    protected PropertyOverrideConfigurer pr;
+
     @Before
     public void setup() {
-        if (!isJdbc()) {
-            jpaUtil.clear2ndLevelHibernateCache();
+       if (!isJdbc()) {
+           // jpaUtil.clear2ndLevelHibernateCache();
+            pr.setIgnoreInvalidKeys(true);
         }
-        cacheManager.getCache("users").clear();
+      //  cacheManager.getCache("users").clear();
     }
 
     @Test
