@@ -1,5 +1,7 @@
 let form;
 
+
+
 function makeEditable(datatableApi) {
     ctx.datatableApi = datatableApi;
     form = $('#detailsForm');
@@ -23,6 +25,9 @@ function updateRow(id) {
     $("#modalTitle").html(i18n["editTitle"]);
     $.get(ctx.ajaxUrl + id, function (data) {
         $.each(data, function (key, value) {
+            if (key === "dateTime") {
+                value = fromISO(value);
+            }
             form.find("input[name='" + key + "']").val(value);
         });
         $('#editRow').modal();
@@ -46,6 +51,10 @@ function updateTableByData(data) {
 }
 
 function save() {
+    const dataTimeFind = form.find('input[name="dateTime"]');
+    if (dataTimeFind != undefined) {
+        dataTimeFind.val(toISO(dataTimeFind.val()));
+    }
     $.ajax({
         type: "POST",
         url: ctx.ajaxUrl,
@@ -97,3 +106,5 @@ function failNoty(jqXHR) {
     });
     failedNote.show()
 }
+
+
